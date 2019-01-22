@@ -14,8 +14,13 @@ public class Philosopher extends Thread {
     public Philosopher(Fork r, Fork l){
         myid = id;
         id++;
-        right = r;
-        left = l;
+        if(myid%2 ==0) {
+            right = r;
+            left = l;
+        } else {
+            right = l;
+            left = r;
+        }
     }
 
     @Override
@@ -28,29 +33,27 @@ public class Philosopher extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+                synchronized (right){
+                    synchronized (left) {
 
-            if (left.picked == false && right.picked == false) {
+                        System.out.println("MyID: " + myid + ": Eating");
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                System.out.println("MyID: " + myid + ": Eating");
-                left.picked = true;
-                right.picked = true;
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
+            }
                 System.out.println("MyID: " + myid + ": Finishing");
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                left.picked = false;
-                right.picked = false;
+
             }
 
         }
     }
-}
+
